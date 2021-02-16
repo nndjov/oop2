@@ -1,29 +1,23 @@
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-
 public class JavaClassLoader extends ClassLoader {
-
-	public void invokeClassMethod(String classBinName, String methodName){
-
+	public void pozoviMetodu(String imeKlase, String imeMetode){
 		try {
+			ClassLoader cl = this.getClass().getClassLoader();
 
-			// Create a new JavaClassLoader
-			ClassLoader classLoader = this.getClass().getClassLoader();
+			// Ucitava se klasa pomocu imena
+	        Class mojaKlasa = cl.loadClass(imeKlase);
+	        System.out.println("Ucitana klasa: " + mojaKlasa.getName());
 
-			// Load the target class using its binary name
-	        Class loadedMyClass = classLoader.loadClass(classBinName);
+	        // Pravi se nova instanca...
+	        Constructor konstruktor = mojaKlasa.getConstructor();
+	        Object mojaKlasaObjekat = konstruktor.newInstance();
 
-	        System.out.println("Loaded class name: " + loadedMyClass.getName());
-
-	        // Create a new instance from the loaded class
-	        Constructor constructor = loadedMyClass.getConstructor();
-	        Object myClassObject = constructor.newInstance();
-
-	        // Getting the target method from the loaded class and invoke it using its name
-	        Method method = loadedMyClass.getMethod(methodName);
-	        System.out.println("Invoked method name: " + method.getName());
-	        method.invoke(myClassObject);
+	        // Pristup metodi...
+	        Method metoda = mojaKlasa.getMethod(imeMetode);
+	        System.out.println("Pozvana metoda: " + metoda.getName());
+	        metoda.invoke(mojaKlasaObjekat);
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
